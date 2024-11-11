@@ -1,5 +1,6 @@
 import { ActionReducerMapBuilder, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DataStatus, userState } from "../../types/redux";
+import { Iuserlogin } from "../../types/user";
 
 
 const initdata: userState = {
@@ -9,7 +10,7 @@ const initdata: userState = {
 }
 
 export const fetchlogin = createAsyncThunk('user/login',
-    async (userData, Thunkapi) => {
+    async (userData:Iuserlogin, Thunkapi) => {
         try {
             const response = await fetch(`https://api.example.com/login`, {
                 method: 'POST',
@@ -30,6 +31,30 @@ export const fetchlogin = createAsyncThunk('user/login',
         }
     }
 )
+export const fetchRegister = createAsyncThunk(
+    "user/register",
+    async (
+      user: { username: string; password: string; isAdmin: boolean },
+      thunkApi
+    ) => {
+      try {
+        const res = await fetch("http://localhost:2222/api/users/register", {
+          method: "post",
+          headers: {
+            "Content-Type": "aplication/json",
+          },
+          body: JSON.stringify(user),
+        });
+        if (res.status != 200) {
+          thunkApi.rejectWithValue("Can't create new user, please try again");
+        }
+        const data = await res.json();
+        thunkApi.fulfillWithValue(data);
+      } catch (err) {
+        thunkApi.rejectWithValue("Can't create new user, please try again");
+      }
+    }
+  );
 
  const userSlice = createSlice({
     name: "user",

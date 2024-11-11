@@ -6,3 +6,9 @@ export interface Iuser{
     hasVoted?: boolean,
     votedFor?: string |null,
 }
+export interface Iuserlogin{
+    
+    username: string,
+    password: string,
+    
+}

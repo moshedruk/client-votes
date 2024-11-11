@@ -1,14 +1,35 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { RootState, useAppDispatch, useAppSelector } from '../redux/store';
+import userSlice from '../redux/slices/userSlice';
 
 export default function Nav() {
+  const user = useAppSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  
+  // const handleLogout = () => {
+  //   dispatch(userSlice.actions.logout());
+  //   localStorage.removeItem("authorization");
+  //   navigate('/login')
+  // };
+
   return (
-    <div className='nav'>
-      <NavLink to={'/login'}>login</NavLink>
-      <NavLink to={'/register'}>register</NavLink>
-      <NavLink to={'/votes'}>votes</NavLink>
-      <NavLink to={'/Statistics'}>Statistics</NavLink>
-      <button onClick={() =>alert("dddddddddddddddd")} ></button>
+    <div className="nav">
+      {user.user ? (
+        <>
+          <NavLink to={"/votes"}>Votes</NavLink>
+          {user.user.isAdmin && (
+            <NavLink to={"/statistics"}>Statistics</NavLink>
+          )}
+          {/* <button onClick={handleLogout}>Logout</button> */}
+        </>
+      ) : (
+        <>
+          <NavLink to={"/login"}>Login</NavLink>
+          <NavLink to={"/register"}>Register</NavLink>
+        </>
+      )}
     </div>
   )
 }
