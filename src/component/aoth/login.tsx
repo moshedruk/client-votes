@@ -7,7 +7,7 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const navigate = useNavigate()
-  const [username, setUsername] = useState("");
+  const [name, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function Login() {
       <input
         type="text"
         placeholder="User Name"
-        value={username}
+        value={name}
         onChange={(e) => setUsername(e.target.value)}
       />
       <input
@@ -36,7 +36,7 @@ export default function Login() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={() => dispatch(fetchlogin({ username, password }))}>
+      <button onClick={() => dispatch(fetchlogin({ name, password }))}>
         Login
       </button>
     </div>

@@ -12,7 +12,11 @@ const initdata: candidateState = {
 export const fetchCandidates = createAsyncThunk('candidate/getlist',
     async (_, Thunkapi) => {
         try {
-            const response = await fetch(`https://api.example.com/login`);
+            const response = await fetch(`http://localhost:1871/api/candidates`,{
+                headers:{
+                    "authorization": localStorage.getItem('token')!,
+                }
+            });
             if (response.status !== 200) {
                 Thunkapi.rejectWithValue("cant get candidate")
             }
@@ -20,7 +24,7 @@ export const fetchCandidates = createAsyncThunk('candidate/getlist',
             Thunkapi.fulfillWithValue(data)
             return data;
         } catch (err) {
-            Thunkapi.rejectWithValue("cant fetch get candidate");
+            Thunkapi.rejectWithValue(`cant fetch get candidate"${err}`);
         }
     }
 )
@@ -34,15 +38,15 @@ export const fetchCandidates = createAsyncThunk('candidate/getlist',
         bilder.addCase(fetchCandidates.pending, (state) => {
             state.status = DataStatus.LOADING;
             state.err = null
-            state.candidate = []
+            // state.candidate = []
         }).addCase(fetchCandidates.fulfilled, (state, action) => {
             state.status = DataStatus.SUCCESS;
-            state.err = null
+            
             state.candidate = action.payload
         }).addCase(fetchCandidates.rejected, (state, action) => {
             state.status = DataStatus.FAILED;
             state.err = action.error as string
-            state.candidate = []
+            
         })
     }
 })

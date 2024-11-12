@@ -12,7 +12,7 @@ const initdata: userState = {
 export const fetchlogin = createAsyncThunk('user/login',
     async (userData:Iuserlogin, Thunkapi) => {
         try {
-            const response = await fetch(`https://api.example.com/login`, {
+            const response = await fetch(`http://localhost:1871/api/users/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -25,9 +25,11 @@ export const fetchlogin = createAsyncThunk('user/login',
 
             const data = await response.json();
             Thunkapi.fulfillWithValue(data)
+            console.log(data.token)
+            localStorage.setItem("token", data.token)
             return data;
         } catch (err) {
-            Thunkapi.rejectWithValue("cant fetch user/login");
+            Thunkapi.rejectWithValue(`cant fetch user/login"${err}`);
         }
     }
 )
@@ -38,7 +40,7 @@ export const fetchRegister = createAsyncThunk(
       thunkApi
     ) => {
       try {
-        const res = await fetch("http://localhost:2222/api/users/register", {
+        const res = await fetch("http://localhost:1871/api/users/register", {
           method: "post",
           headers: {
             "Content-Type": "aplication/json",
@@ -51,7 +53,29 @@ export const fetchRegister = createAsyncThunk(
         const data = await res.json();
         thunkApi.fulfillWithValue(data);
       } catch (err) {
-        thunkApi.rejectWithValue("Can't create new user, please try again");
+        thunkApi.rejectWithValue(`Can't create new user, please try again${err}`);
+      }
+    }
+  );
+  export const fetchProfileUpdate = createAsyncThunk(
+    "user/profile",
+    async (id: string, thunkApi) => {
+      try {
+        const res = await fetch("http://localhost:2222/api/users/profile", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage["token"]!,
+          },
+          body: JSON.stringify({ id }),
+        });
+        if (res.status != 200) {
+          thunkApi.rejectWithValue("Can't update profile, please try again");
+        }
+        const data = await res.json();
+        return data;
+      } catch (err) {
+        thunkApi.rejectWithValue(`Can't login, please try again ${err}`);
       }
     }
   );
@@ -59,7 +83,11 @@ export const fetchRegister = createAsyncThunk(
  const userSlice = createSlice({
     name: "user",
     initialState: initdata,
-    reducers: {},
+    reducers: {
+      logout: (state) => {
+        state.user = null;
+      },
+    },
     extraReducers: (
         bilder: ActionReducerMapBuilder<userState>) => {
         bilder.addCase(fetchlogin.pending, (state) => {

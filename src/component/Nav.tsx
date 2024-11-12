@@ -8,11 +8,11 @@ export default function Nav() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   
-  // const handleLogout = () => {
-  //   dispatch(userSlice.actions.logout());
-  //   localStorage.removeItem("authorization");
-  //   navigate('/login')
-  // };
+  const handleLogout = () => {
+    dispatch(userSlice.actions.logout());
+    localStorage.removeItem("token");
+    navigate('/login')
+  };
 
   return (
     <div className="nav">
@@ -20,9 +20,12 @@ export default function Nav() {
         <>
           <NavLink to={"/votes"}>Votes</NavLink>
           {user.user.isAdmin && (
+            <>
             <NavLink to={"/statistics"}>Statistics</NavLink>
+            <NavLink to={"/addcandidate"}>add-candidate</NavLink>
+            </>
           )}
-          {/* <button onClick={handleLogout}>Logout</button> */}
+          <button onClick={handleLogout}>Logout</button>
         </>
       ) : (
         <>

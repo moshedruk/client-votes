@@ -5,16 +5,19 @@ import { Icandidate } from '../../types/candidate';
 import VoteCard from './voteCard';
 import { fetchCandidates } from '../../redux/slices/candidateSlice';
 
+
 export default function Votes() {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { candidate } = useAppSelector((state) => state.candidate);
+  console.log(candidate)
   const navigate = useNavigate();
+  console.log("dfdfffffffffffffd")
   
   useEffect(() => {
     if (!user?._id) {
-        navigate('/login')
-    }
+        navigate('/login') 
+    }    
     dispatch(fetchCandidates())
   }, []);
   return (<div className="vote-list">

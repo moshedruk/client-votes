@@ -8,7 +8,7 @@ export interface Iuser{
 }
 export interface Iuserlogin{
     
-    username: string,
+    name: string,
     password: string,
     
 }
